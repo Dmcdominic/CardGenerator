@@ -29,6 +29,10 @@ for (var i=1; i < values.length; i++) {
 // Remove the empty string nonTerminal
 delete nonTerminals[""];
 
+// Populate tags
+getTags("Minion");
+getTags("Spell");
+
 // Testing content structuring
 console.log("Full content data:");
 console.log(nonTerminals);
@@ -83,6 +87,67 @@ function parseWeight(valueString) {
 }
 
 
+// ========== TAG POPULATION ==========
+function getTags(obj) {
+	if (obj === null || obj === undefined) {
+		throw "Cannot get tags of null or undefined.";
+	}
+
+	if (obj.tags !== undefined) {
+		return obj.tags;
+	}
+
+	// Convert a pure string input into an object.
+	if (isString(obj)) {
+		obj = {name:obj};
+	}
+
+	obj.tags = " ";
+
+	for (var x=0; x < 1; x++) {
+		// Strings - e.g. terminals
+		if (isNonTerminal(obj)) {
+			obj.tags += trimAll(obj.name || " ");
+			break;
+		}
+
+		// Sequences (i.e. includes a '+')
+		var plusIndex = obj.name.indexOf('+');
+		if (plusIndex > 0) {
+			var tempName = obj.name
+			while (plusIndex > 0) {
+				var firstSymbol = tempName.substring(0, plusIndex).trim();
+				tempName = tempName.substring(plusIndex + 1, tempName.length).trim();
+				obj.tags += getTags(firstSymbol) + " ";
+				plusIndex = tempName.indexOf('+');
+			}
+			obj.tags += getTags(tempName) + " ";
+			break;
+		}
+
+		// NonTerminals
+		var values = nonTerminals[obj.name];
+		if (values === undefined) {
+			throw "ERROR: Values for \'" + obj.name + "\' not found in nonTerminals object";
+		}
+
+		if (isArray(values)) {
+			for (var i=0; i < values.length; i++) {
+				obj.tags += getTags(values[i]) + " ";
+			}
+			break;
+		}
+
+		// Nothing should fall through
+		throw "ERROR: No valid case found while getting tags for: " + obj;
+	}
+
+	// Nothing should fall through
+	obj.tags = trimAll(obj.tags);
+	return obj.tags;
+}
+
+
 // ========== UTIL ==========
 // Type-checking
 function isString(val) {
@@ -104,6 +169,10 @@ function trimQuotes(val) {
 		next_quote = val.indexOf('\"');
 	}
 	return val.trim();
+}
+
+function trimAll(val) {
+	return trimQuotes(val).trim();
 }
 
 // Get a random element of an Array
@@ -146,7 +215,7 @@ function randElement(array, obj) {
 // Create a random instance of an object
 function generateRandom(obj) {
 	// Null check
-	if (obj === null || obj === "undefined") {
+	if (obj === null || obj === undefined) {
 		throw "Cannot generate random of null or undefined.";
 	}
 
@@ -197,7 +266,7 @@ function generateRandom(obj) {
 
 function generateFullRandom(name) {
 	var randomly_generated_string = generateRandom(name).name;
-	return trimQuotes(randomly_generated_string);
+	return trimAll(randomly_generated_string);
 }
 
 
