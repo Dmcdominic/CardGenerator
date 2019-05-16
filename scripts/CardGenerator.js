@@ -79,7 +79,7 @@ function parseWeight(valueString) {
 	var first_bracket = valueString.indexOf("<");
 	var last_bracket = valueString.indexOf(">");
 	if (first_bracket >= 0 && last_bracket > 0) {
-		weight = parseInt(valueString.substring(first_bracket + 1, last_bracket));
+		weight = parseFloat(valueString.substring(first_bracket + 1, last_bracket));
 	} else {
 		weight = 1;
 	}
@@ -172,7 +172,36 @@ function trimQuotes(val) {
 }
 
 function trimAll(val) {
-	return trimQuotes(val).trim();
+	var trimmed = trimQuotes(val).trim();
+	trimmed = fixPeriodsSpacing(trimmed);
+	trimmed = fixDoubleSpacing(trimmed);
+	return trimmed;
+}
+
+function fixPeriodsSpacing(val) {
+	var next_period = val.indexOf('.');
+	while (next_period >= 0) {
+		if (val.charAt(next_period - 1) === ' ') {
+			val = val.slice(0, next_period - 1) + val.slice(next_period, val.length);
+			next_period = val.indexOf('.', next_period);
+		} else {
+			next_period = val.indexOf('.', next_period + 1);
+		}
+	}
+	return val;
+}
+
+function fixDoubleSpacing(val) {
+	var next_space = val.indexOf(' ');
+	while (next_space >= 0) {
+		if (val.charAt(next_space - 1) === ' ') {
+			val = val.slice(0, next_space - 1) + val.slice(next_space, val.length);
+			next_space = val.indexOf(' ', next_space);
+		} else {
+			next_space = val.indexOf(' ', next_space + 1);
+		}
+	}
+	return val;
 }
 
 // Get a random element of an Array
@@ -273,17 +302,19 @@ function generateFullRandom(name) {
 // ========= TESTING ==========
 var minion_total = 4;
 var spell_total = 4;
+generateCards(minion_total, spell_total);
 
-console.log("===== Start of testing =====");
+function generateCards(minion_total, spell_total) {
+	console.log("===== Generating " + minion_total + " random minions =====");
+	for (var i=0; i < minion_total; i++) {
+		console.log("MINION: " + generateFullRandom("Minion"));
+	}
 
-console.log("Generating " + minion_total + " random minions:");
-for (var i=0; i < minion_total; i++) {
-	console.log("Minion: " + generateFullRandom("Minion"));
+	console.log("===== Generating " + spell_total + " random spells =====");
+	for (var i=0; i < spell_total; i++) {
+		console.log("SPELL: " + generateFullRandom("Spell"));
+	}
+
+	console.log("===== Completed generation =====");
+	return true;
 }
-
-console.log("Generating " + spell_total + " random spells:");
-for (var i=0; i < spell_total; i++) {
-	console.log("Spell: " + generateFullRandom("Spell"));
-}
-
-console.log("===== Completed testing =====");
