@@ -173,32 +173,34 @@ function trimQuotes(val) {
 
 function trimAll(val) {
 	var trimmed = trimQuotes(val).trim();
-	trimmed = fixPeriodsSpacing(trimmed);
-	trimmed = fixDoubleSpacing(trimmed);
+	trimmed = removeSpacingBefore(trimmed, ".");
+	trimmed = removeSpacingBefore(trimmed, ",");
+	trimmed = removeSpacingBefore(trimmed, " ");
+	trimmed = substituteLineBreaks(trimmed);
 	return trimmed;
 }
 
-function fixPeriodsSpacing(val) {
-	var next_period = val.indexOf('.');
-	while (next_period >= 0) {
-		if (val.charAt(next_period - 1) === ' ') {
-			val = val.slice(0, next_period - 1) + val.slice(next_period, val.length);
-			next_period = val.indexOf('.', next_period);
+function removeSpacingBefore(val, char) {
+	var next_index = val.indexOf(char);
+	while (next_index >= 0) {
+		if (val.charAt(next_index - 1) === " ") {
+			val = val.slice(0, next_index - 1) + val.slice(next_index, val.length);
+			next_index = val.indexOf(char, next_index);
 		} else {
-			next_period = val.indexOf('.', next_period + 1);
+			next_index = val.indexOf(char, next_index + 1);
 		}
 	}
 	return val;
 }
 
-function fixDoubleSpacing(val) {
-	var next_space = val.indexOf(' ');
-	while (next_space >= 0) {
-		if (val.charAt(next_space - 1) === ' ') {
-			val = val.slice(0, next_space - 1) + val.slice(next_space, val.length);
-			next_space = val.indexOf(' ', next_space);
+function substituteLineBreaks(val) {
+	var next_index = val.indexOf('\\');
+	while (next_index >= 0) {
+		if (val.charAt(next_index + 1) === "n") {
+			val = val.slice(0, next_index) + '\n' + val.slice(next_index + 2, val.length).trim();
+			next_index = val.indexOf('\\', next_index + 1);
 		} else {
-			next_space = val.indexOf(' ', next_space + 1);
+			next_index = val.indexOf('\\', next_index + 1);
 		}
 	}
 	return val;
