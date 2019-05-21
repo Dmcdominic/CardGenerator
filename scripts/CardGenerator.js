@@ -1,3 +1,16 @@
+// ========= FORWARD DECLARATIONS ==========
+// Substitution rules for cleaner syntax
+var substitutions = {
+	" \\n " : "<br>",
+	"\\n" : "<br>",
+	" ." : ".",
+	" ," : ",",
+	"  " : " ",
+	"plus " : "+",
+	" / " : "/",
+	" -" : "-"
+}
+
 // ========== CONTENT STRUCTURING ==========
 var values = data.values;
 var nonTerminals = {};
@@ -173,35 +186,17 @@ function trimQuotes(val) {
 
 function trimAll(val) {
 	var trimmed = trimQuotes(val).trim();
-	trimmed = removeSpacingBefore(trimmed, ".");
-	trimmed = removeSpacingBefore(trimmed, ",");
-	trimmed = removeSpacingBefore(trimmed, " ");
-	trimmed = substituteLineBreaks(trimmed);
+	for (var toReplace in substitutions) {
+		trimmed = substituteEach(trimmed, toReplace, substitutions[toReplace]);
+	}
 	return trimmed;
 }
 
-function removeSpacingBefore(val, char) {
-	var next_index = val.indexOf(char);
+function substituteEach(val, replaceThis, withThis) {
+	var next_index = val.indexOf(replaceThis);
 	while (next_index >= 0) {
-		if (val.charAt(next_index - 1) === " ") {
-			val = val.slice(0, next_index - 1) + val.slice(next_index, val.length);
-			next_index = val.indexOf(char, next_index);
-		} else {
-			next_index = val.indexOf(char, next_index + 1);
-		}
-	}
-	return val;
-}
-
-function substituteLineBreaks(val) {
-	var next_index = val.indexOf('\\');
-	while (next_index >= 0) {
-		if (val.charAt(next_index + 1) === "n") {
-			val = val.slice(0, next_index) + '\n' + val.slice(next_index + 2, val.length).trim();
-			next_index = val.indexOf('\\', next_index + 1);
-		} else {
-			next_index = val.indexOf('\\', next_index + 1);
-		}
+		val = val.slice(0, next_index) + withThis + val.slice(next_index + replaceThis.length, val.length);
+		next_index = val.indexOf(replaceThis, next_index + withThis.length);
 	}
 	return val;
 }
@@ -302,9 +297,8 @@ function generateFullRandom(name) {
 
 
 // ========= TESTING ==========
-var minion_total = 4;
-var spell_total = 4;
-generateCards(minion_total, spell_total);
+var minion_total = 3;
+var spell_total = 3;
 
 function generateCards(minion_total, spell_total) {
 	console.log("===== Generating " + minion_total + " random minions =====");
@@ -319,4 +313,8 @@ function generateCards(minion_total, spell_total) {
 
 	console.log("===== Completed generation =====");
 	return true;
+}
+
+function test() {
+	generateCards(minion_total, spell_total);
 }
