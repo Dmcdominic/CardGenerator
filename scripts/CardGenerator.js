@@ -1,4 +1,4 @@
-// ========= FORWARD DECLARATIONS ==========
+// ========= VARIABLE DECLARATIONS ==========
 // Substitution rules for cleaner syntax
 var substitutions = {
 	" \\n " : "<br>",
@@ -45,10 +45,6 @@ delete nonTerminals[""];
 // Populate tags
 getTags("Minion");
 getTags("Spell");
-
-// Testing content structuring
-console.log("Full content data:");
-console.log(nonTerminals);
 
 
 // ========== CONTENT STRUCTURING UTIL ==========
@@ -296,10 +292,15 @@ function generateFullRandom(name) {
 }
 
 
-// ========= TESTING ==========
+// ========= TESTING & GENERATION INTERFACE ==========
 var minion_total = 3;
 var spell_total = 3;
 
+// Testing content structuring
+// console.log("Full content data:");
+// console.log(nonTerminals);
+
+// Generating a set of cards
 function generateCards(minion_total, spell_total) {
 	console.log("===== Generating " + minion_total + " random minions =====");
 	for (var i=0; i < minion_total; i++) {
