@@ -7,8 +7,13 @@ var substitutions = {
 	" ," : ",",
 	"  " : " ",
 	"plus " : "+",
+	"minus " : "-",
 	" / " : "/",
-	" -" : "-"
+	"- " : "-",
+	": }" : " }",
+	" nspc " : "",
+	" nspc" : "",
+	"nspc " : ""
 }
 
 // ========== CONTENT STRUCTURING ==========
