@@ -1,7 +1,7 @@
 # CardGenerator
 A random card generator, designed specifically with Hearthstone in mind, but generally applicable to other CCG/TCG's.
 
-Try it out online: https://dominic-calkosz.com/Card-Generator
+Try it out online: [https://dominic-calkosz.com/Card-Generator](https://dominic-calkosz.com/Card-Generator)
 
 ## Generation Data
 All of the card generation is based on a context free grammar, developed manually, which is pulled directly from [this Google Sheet](https://docs.google.com/spreadsheets/d/1h9wySUc0MGK2p3h5Eds8_8TSfLMenvqYym5zeSot7Bs/edit?usp=sharing). Special thanks to Adrian Mester for helping me to structure and populate this, and for the original inspiration.
