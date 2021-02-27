@@ -340,9 +340,12 @@ function test() {
 	generateCards(minion_total, spell_total);
 }
 
-module.exports = {
-	generateFullRandom : generateFullRandom,
-	generateCard : generateCard,
-	generateMinion : generateMinion,
-	generateSpell : generateSpell
+
+if (typeof module !== "undefined") {
+	module.exports = {
+		generateFullRandom : generateFullRandom,
+		generateCard : generateCard,
+		generateMinion : generateMinion,
+		generateSpell : generateSpell
+	}
 }
