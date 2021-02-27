@@ -1,3 +1,9 @@
+// ========= IMPORT DATA ===========
+if (typeof require !== "undefined") {
+	const cardGenContent = require('../cardGenContent.js');
+	var data = cardGenContent.data();
+}
+
 // ========= VARIABLE DECLARATIONS ==========
 // Substitution rules for cleaner syntax
 var substitutions = {
@@ -48,8 +54,7 @@ for (var i=1; i < values.length; i++) {
 delete nonTerminals[""];
 
 // Populate tags
-getTags("Minion");
-getTags("Spell");
+getTags("Card");
 
 
 // ========== CONTENT STRUCTURING UTIL ==========
@@ -296,6 +301,16 @@ function generateFullRandom(name) {
 	return trimAll(randomly_generated_string);
 }
 
+function generateCard() {
+	return generateFullRandom("Card");
+}
+function generateMinion() {
+	return generateFullRandom("Minion");
+}
+function generateSpell() {
+	return generateFullRandom("Spell");
+}
+
 
 // ========= TESTING & GENERATION INTERFACE ==========
 var minion_total = 3;
@@ -309,12 +324,12 @@ var spell_total = 3;
 function generateCards(minion_total, spell_total) {
 	console.log("===== Generating " + minion_total + " random minions =====");
 	for (var i=0; i < minion_total; i++) {
-		console.log("MINION: " + generateFullRandom("Minion"));
+		console.log("MINION: " + generateMinion());
 	}
 
 	console.log("===== Generating " + spell_total + " random spells =====");
 	for (var i=0; i < spell_total; i++) {
-		console.log("SPELL: " + generateFullRandom("Spell"));
+		console.log("SPELL: " + generateSpell());
 	}
 
 	console.log("===== Completed generation =====");
@@ -323,4 +338,11 @@ function generateCards(minion_total, spell_total) {
 
 function test() {
 	generateCards(minion_total, spell_total);
+}
+
+module.exports = {
+	generateFullRandom : generateFullRandom,
+	generateCard : generateCard,
+	generateMinion : generateMinion,
+	generateSpell : generateSpell
 }

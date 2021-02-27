@@ -69,7 +69,8 @@ function getNewToken(oAuth2Client, callback) {
 }
 
 // ========== READING CARD GEN CONTENT ==========
-const CONTENT_PATH = 'cardGenContent.json';
+const CONTENT_JS_PATH = 'cardGenContent.js';
+const CONTENT_JSON_PATH = 'cardGenContent.json';
 const RANGE = 'A:Z';
 
 // Stores all values in the given range to a local json
@@ -83,9 +84,15 @@ function saveCardGenContent(auth) {
 		const rows = res.data.values;
 		if (rows.length) {
 			// Save sheet data to local json
-			fs.writeFile(CONTENT_PATH, "var data = " + JSON.stringify(res.data), (err) => {
+      let data_stringified = JSON.stringify(res.data);
+			fs.writeFile(CONTENT_JS_PATH, "module.exports = { data: function() { return " + data_stringified + "; } }",
+      (err) => {
 				if (err) return console.error(err);
-				console.log('Content stored to: ', CONTENT_PATH);
+				console.log('Content stored to: ', CONTENT_JS_PATH);
+			});
+			fs.writeFile(CONTENT_JSON_PATH, "var data = " + data_stringified, (err) => {
+				if (err) return console.error(err);
+				console.log('Content stored to: ', CONTENT_JSON_PATH);
 			});
 		} else {
 			console.log('No data found.');
